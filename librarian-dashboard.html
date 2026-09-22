@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Librarian Dashboard | E-LIBRARY</title><link rel="stylesheet" href="style.css">
+<script src="books-data.js"></script><script src="auth.js"></script>
+<script>protectPage();</script>
+<style>
+.role-pill{display:inline-block;background:linear-gradient(90deg,var(--primary),var(--secondary));color:#fff;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.5px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="librarian-dashboard.html"><span class="brand-icon">📖</span>E-LIBRARY</a>
+<nav class="nav"><a class="active" href="librarian-dashboard.html">Dashboard</a><a href="add-book.html">Add Book</a><a href="manage-books.html">Manage Books</a><a href="issue-return.html">Issue/Return</a><a href="librarian-reports.html">Reports</a><a href="login.html" data-logout>Logout</a></nav></header>
+
+<main class="container">
+<span class="role-pill">🧑‍💼 Librarian Portal</span>
+<section class="hero">
+<div><h1>Welcome to the Librarian Dashboard 🗂️</h1><p>Add new books, manage the catalog, issue and return books, and check activity reports for your organization's library.</p></div>
+<div class="hero-actions"><a class="btn btn-primary" href="add-book.html">Add a Book</a><a class="btn btn-light" href="issue-return.html">Issue / Return</a></div>
+</section>
+
+<div class="grid" style="margin-top:18px" id="statGrid"></div>
+
+<div class="section-title"><h2>Quick Access</h2></div>
+<div class="grid-3">
+<a class="card" href="add-book.html"><div class="icon">➕</div><h3>Add Book</h3><p>Add a new title to the digital collection.</p></a>
+<a class="card" href="manage-books.html"><div class="icon">🗃️</div><h3>Manage Books</h3><p>Edit status or remove books from the catalog.</p></a>
+<a class="card" href="issue-return.html"><div class="icon">🔄</div><h3>Issue / Return</h3><p>Issue an available book or mark one as returned.</p></a>
+</div>
+
+<div class="section-title"><h2>Books Needing Attention</h2></div>
+<div class="table-wrap"><table class="table" id="attentionTable"></table></div>
+</main>
+
+<footer class="footer"><strong>E-LIBRARY</strong><p>Online Book Management and Reading System • Librarian Portal</p></footer>
+
+<script>
+function renderDashboard() {
+  const total = BOOKS.length;
+  const available = BOOKS.filter(b => b.status === "available").length;
+  const borrowed = BOOKS.filter(b => b.status === "borrowed").length;
+  const reserved = BOOKS.filter(b => b.status === "reserved").length;
+
+  document.getElementById("statGrid").innerHTML = `
+    <div class="card stat"><div class="icon">📚</div><div><h3>${total}</h3><p>Total Books</p></div></div>
+    <div class="card stat"><div class="icon">✅</div><div><h3>${available}</h3><p>Available</p></div></div>
+    <div class="card stat"><div class="icon">📖</div><div><h3>${borrowed}</h3><p>Currently Borrowed</p></div></div>
+    <div class="card stat"><div class="icon">🔖</div><div><h3>${reserved}</h3><p>Reserved</p></div></div>
+  `;
+
+  const attention = BOOKS.filter(b => b.status !== "available");
+  const table = document.getElementById("attentionTable");
+  table.innerHTML = `<tr><th>Book</th><th>Category</th><th>Status</th><th>Due Date</th><th>Action</th></tr>` +
+    (attention.length ? attention.map(b => `
+      <tr>
+        <td>${b.title}</td><td>${b.category}</td>
+        <td><span class="badge ${b.status}">${statusLabel(b.status)}</span></td>
+        <td>${b.dueDate || "-"}</td>
+        <td><a class="btn btn-light" href="issue-return.html">Manage</a></td>
+      </tr>
+    `).join("") : `<tr><td colspan="5" style="color:var(--muted)">Every book is currently available.</td></tr>`);
+}
+
+document.addEventListener("DOMContentLoaded", renderDashboard);
+</script>
+</body></html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Favorites | E-LIBRARY</title><link rel="stylesheet" href="style.css">
+<script src="books-data.js"></script><script src="auth.js"></script>
+<script>protectPage();</script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="dashboard.html"><span class="brand-icon">📖</span>E-LIBRARY</a>
+<nav class="nav"><a class="" href="dashboard.html">Dashboard</a><a class="" href="books.html">Browse Books</a><a class="" href="search.html">Search & Filter</a><a class="" href="my-library.html">My Library</a><a class="active" href="favorites.html">Favorites</a><a class="" href="history.html">Reading History</a><a class="" href="reader.html">Online Reader</a><a href="login.html" data-logout>Logout</a></nav></header>
+<main class="container">
+<div class="page-head"><h1>❤️ My Favorites</h1><p>Your saved books are collected here for quick access.</p></div>
+<div class="grid-3" id="favoritesGrid"></div>
+</main>
+<footer class="footer"><strong>E-LIBRARY</strong><p>Online Book Management and Reading System • Student Portal</p></footer>
+
+<script>
+function renderFavorites() {
+  const ids = getFavoriteIds();
+  const books = BOOKS.filter(b => ids.includes(b.id));
+  const grid = document.getElementById("favoritesGrid");
+
+  grid.innerHTML = books.length ? books.map(book => `
+    <div class="card book-card">
+      <a href="book-details.html?id=${book.id}"><div class="book-cover">${book.cover}</div></a>
+      <h3><a href="book-details.html?id=${book.id}" style="color:inherit">${book.title}</a></h3>
+      <p>${book.category} • ${book.author}</p>
+      <a class="btn btn-primary" href="reader.html">Read Online</a>
+      <a class="btn btn-light" href="#" onclick="removeFavorite(event, ${book.id})">Remove</a>
+    </div>
+  `).join("") : `<p style="color:var(--muted)">You haven't added any favorites yet. Go to <a href="books.html">Browse Books</a> and tap the heart icon on any book to save it here.</p>`;
+}
+
+function removeFavorite(event, id) {
+  event.preventDefault();
+  toggleFavorite(id);
+  renderFavorites();
+}
+
+document.addEventListener("DOMContentLoaded", renderFavorites);
+</script>
+</body></html>

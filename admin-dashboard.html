@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Admin Dashboard | E-LIBRARY</title><link rel="stylesheet" href="style.css">
+<script src="books-data.js"></script><script src="auth.js"></script>
+<script>protectPage();</script>
+<style>
+.role-pill{display:inline-block;background:linear-gradient(90deg,var(--secondary),var(--pink));color:#fff;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.5px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="admin-dashboard.html"><span class="brand-icon">📖</span>E-LIBRARY</a>
+<nav class="nav"><a class="active" href="admin-dashboard.html">Dashboard</a><a href="manage-users.html">Manage Users</a><a href="manage-librarians.html">Manage Librarians</a><a href="manage-books.html">Manage Books</a><a href="admin-reports.html">Reports</a><a href="login.html" data-logout>Logout</a></nav></header>
+
+<main class="container">
+<span class="role-pill">⚙ Admin Portal</span>
+<section class="hero">
+<div><h1>Welcome to the Admin Dashboard ⚙️</h1><p>Manage user accounts, librarians, the book catalog, and view system-wide reports for your organization's E-LIBRARY.</p></div>
+<div class="hero-actions"><a class="btn btn-primary" href="manage-users.html">Manage Users</a><a class="btn btn-light" href="admin-reports.html">View Reports</a></div>
+</section>
+
+<div class="grid" style="margin-top:18px" id="statGrid"></div>
+
+<div class="section-title"><h2>Quick Access</h2></div>
+<div class="grid-3">
+<a class="card" href="manage-users.html"><div class="icon">👥</div><h3>Manage Users</h3><p>Activate, deactivate, or review student and staff accounts.</p></a>
+<a class="card" href="manage-librarians.html"><div class="icon">🧑‍💼</div><h3>Manage Librarians</h3><p>Add librarians or review who manages the catalog.</p></a>
+<a class="card" href="manage-books.html"><div class="icon">🗃️</div><h3>Manage Books</h3><p>Oversee the full book catalog across every category.</p></a>
+</div>
+</main>
+
+<footer class="footer"><strong>E-LIBRARY</strong><p>Online Book Management and Reading System • Admin Portal</p></footer>
+
+<script>
+function renderStats() {
+  document.getElementById("statGrid").innerHTML = `
+    <div class="card stat"><div class="icon">🧑‍🎓</div><div><h3>1,200</h3><p>Registered Students</p></div></div>
+    <div class="card stat"><div class="icon">🧑‍💼</div><div><h3>6</h3><p>Librarians</p></div></div>
+    <div class="card stat"><div class="icon">📚</div><div><h3>${BOOKS.length}</h3><p>Books in Catalog</p></div></div>
+    <div class="card stat"><div class="icon">⏳</div><div><h3>3</h3><p>Pending Approvals</p></div></div>
+  `;
+}
+document.addEventListener("DOMContentLoaded", renderStats);
+</script>
+</body></html>

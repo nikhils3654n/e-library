@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Search & Filter | E-LIBRARY</title><link rel="stylesheet" href="style.css">
+<script src="books-data.js"></script><script src="auth.js"></script>
+<script>protectPage();</script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="dashboard.html"><span class="brand-icon">📖</span>E-LIBRARY</a>
+<nav class="nav"><a class="" href="dashboard.html">Dashboard</a><a class="" href="books.html">Browse Books</a><a class="active" href="search.html">Search & Filter</a><a class="" href="my-library.html">My Library</a><a class="" href="favorites.html">Favorites</a><a class="" href="history.html">Reading History</a><a class="" href="reader.html">Online Reader</a><a href="login.html" data-logout>Logout</a></nav></header>
+<main class="container">
+<div class="page-head"><h1>Search & Filter</h1><p>Find a book quickly using title, author, category, or availability.</p></div>
+<div class="card">
+<div class="form">
+<label>Keyword<input type="text" id="searchKeyword" placeholder="Example: Python, AI, Database"></label>
+<label>Author<input type="text" id="searchAuthor" placeholder="Enter author name"></label>
+<label>Category<select id="searchCategory"><option value="">All Categories</option><option>Programming</option><option>Computer Science</option><option>Science</option><option>Mathematics</option><option>History</option></select></label>
+<label>Book Status<select id="searchStatus"><option value="">All Status</option><option value="available">Available</option><option value="borrowed">Borrowed</option><option value="reserved">Reserved</option></select></label>
+<button class="btn btn-primary" onclick="runSearch()">APPLY FILTER</button>
+</div></div>
+<div class="section-title"><h2>Search Results</h2><span style="color:var(--muted)" id="resultCount"></span></div>
+<div class="table-wrap"><table class="table" id="resultsTable"></table></div>
+</main>
+<footer class="footer"><strong>E-LIBRARY</strong><p>Online Book Management and Reading System • Student Portal</p></footer>
+
+<script>
+function runSearch() {
+  const keyword = (document.getElementById("searchKeyword").value || "").toLowerCase().trim();
+  const author = (document.getElementById("searchAuthor").value || "").toLowerCase().trim();
+  const category = document.getElementById("searchCategory").value;
+  const status = document.getElementById("searchStatus").value;
+
+  const results = BOOKS.filter(b =>
+    (!keyword || b.title.toLowerCase().includes(keyword)) &&
+    (!author || b.author.toLowerCase().includes(author)) &&
+    (!category || b.category === category) &&
+    (!status || b.status === status)
+  );
+
+  document.getElementById("resultCount").textContent = `${results.length} book${results.length === 1 ? "" : "s"} found`;
+
+  const table = document.getElementById("resultsTable");
+  table.innerHTML = `<tr><th>Book</th><th>Author</th><th>Category</th><th>Status</th><th>Action</th></tr>` +
+    (results.length ? results.map(b => `
+      <tr>
+        <td><a href="book-details.html?id=${b.id}" style="color:inherit;font-weight:700">${b.title}</a></td>
+        <td>${b.author}</td>
+        <td>${b.category}</td>
+        <td><span class="badge ${b.status}">${statusLabel(b.status)}</span></td>
+        <td>${b.status === "available"
+              ? `<a class="btn btn-primary" href="reader.html">Read</a>`
+              : `<a class="btn btn-light" href="my-library.html">Details</a>`}</td>
+      </tr>
+    `).join("") : `<tr><td colspan="5" style="color:var(--muted)">No books match your filters.</td></tr>`);
+}
+
+document.addEventListener("DOMContentLoaded", runSearch);
+</script>
+</body></html>

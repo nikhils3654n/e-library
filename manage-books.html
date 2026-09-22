@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Manage Books | E-LIBRARY</title><link rel="stylesheet" href="style.css">
+<script src="books-data.js"></script><script src="auth.js"></script>
+<script>protectPage();</script>
+<style>
+.role-pill{display:inline-block;background:linear-gradient(90deg,var(--primary),var(--secondary));color:#fff;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.5px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="librarian-dashboard.html"><span class="brand-icon">📖</span>E-LIBRARY</a>
+<nav class="nav"><a href="librarian-dashboard.html">Dashboard</a><a href="add-book.html">Add Book</a><a class="active" href="manage-books.html">Manage Books</a><a href="issue-return.html">Issue/Return</a><a href="librarian-reports.html">Reports</a><a href="login.html" data-logout>Logout</a></nav></header>
+
+<main class="container">
+<span class="role-pill">🧑‍💼 Librarian / Admin</span>
+<div class="page-head"><h1>Manage Books</h1><p>Update a book's status or remove it from the catalog. Changes apply everywhere the catalog is shown.</p></div>
+
+<div class="searchbar">
+  <div class="grow"><input type="text" id="manageSearch" placeholder="Search by title or author" oninput="renderManageBooks()"></div>
+  <button class="btn btn-primary" onclick="renderManageBooks()">Search</button>
+</div>
+
+<div class="table-wrap"><table class="table" id="manageTable"></table></div>
+</main>
+
+<footer class="footer"><strong>E-LIBRARY</strong><p>Online Book Management and Reading System • Librarian / Admin Portal</p></footer>
+
+<script>
+const STATUS_CYCLE = ["available", "borrowed", "reserved"];
+
+function renderManageBooks() {
+  const q = (document.getElementById("manageSearch").value || "").toLowerCase().trim();
+  const table = document.getElementById("manageTable");
+
+  const filtered = BOOKS.filter(b =>
+    !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)
+  );
+
+  table.innerHTML = `<tr><th>Book</th><th>Author</th><th>Category</th><th>Status</th><th>Action</th></tr>` +
+    (filtered.length ? filtered.map(b => `
+      <tr>
+        <td>${b.title}</td>
+        <td>${b.author}</td>
+        <td>${b.category}</td>
+        <td><span class="badge ${b.status}">${statusLabel(b.status)}</span></td>
+        <td>
+          <a class="btn btn-light" href="#" onclick="cycleStatus(event, ${b.id})">Change Status</a>
+          <a class="btn btn-light" href="#" onclick="removeBook(event, ${b.id})">Remove</a>
+        </td>
+      </tr>
+    `).join("") : `<tr><td colspan="5" style="color:var(--muted)">No books match your search.</td></tr>`);
+}
+
+function cycleStatus(event, id) {
+  event.preventDefault();
+  const book = getBookById(id);
+  if (!book) return;
+  const next = STATUS_CYCLE[(STATUS_CYCLE.indexOf(book.status) + 1) % STATUS_CYCLE.length];
+  book.status = next;
+  if (next === "available") delete book.dueDate;
+  renderManageBooks();
+}
+
+function removeBook(event, id) {
+  event.preventDefault();
+  const index = BOOKS.findIndex(b => b.id === id);
+  if (index !== -1) BOOKS.splice(index, 1);
+  renderManageBooks();
+}
+
+document.addEventListener("DOMContentLoaded", renderManageBooks);
+</script>
+</body></html>

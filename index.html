@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-LIBRARY | Online Book Management and Reading System</title>
+
+<style>
+    /* =========================================================
+       E-LIBRARY  -  HOME PAGE STYLE
+       Only HTML + CSS is used. There is NO JavaScript anywhere.
+       The dark / light theme works with a hidden checkbox.
+       ========================================================= */
+
+    /* ---------- 1. LIGHT THEME COLOURS (default) ---------- */
+    .page {
+        --bg:        #ffffff;
+        --surface:   #f5f3ff;
+        --card:      #ffffff;
+        --text:      #1f2937;
+        --text-soft: #4b5563;
+        --heading:   #4338ca;
+        --border:    #e5e7eb;
+        --shadow:    rgba(67, 56, 202, 0.15);
+
+        --purple: #6d28d9;
+        --indigo: #4338ca;
+        --teal:   #0d9488;
+        --orange: #f97316;
+        --pink:   #ec4899;
+        --yellow: #fbbf24;
+    }
+
+    /* ---------- 2. DARK THEME COLOURS ----------
+       When the hidden checkbox is ticked, these new
+       colour values replace the ones above.        */
+    #themeSwitch:checked ~ .page {
+        --bg:        #0f172a;
+        --surface:   #16213e;
+        --card:      #1e293b;
+        --text:      #e5e7eb;
+        --text-soft: #a5b4cf;
+        --heading:   #c4b5fd;
+        --border:    #334155;
+        --shadow:    rgba(0, 0, 0, 0.5);
+
+        --purple: #a78bfa;
+        --indigo: #818cf8;
+        --teal:   #2dd4bf;
+        --orange: #fb923c;
+        --pink:   #f472b6;
+        --yellow: #fcd34d;
+    }
+
+    /* Hide the checkbox itself, but keep it usable by keyboard */
+    #themeSwitch {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    body {
+        margin: 0;
+        font-family: "Trebuchet MS", Verdana, sans-serif;
+        line-height: 1.6;
+    }
+
+    .page {
+        background-color: var(--bg);
+        color: var(--text);
+        transition: background-color 0.4s, color 0.4s;
+    }
+
+    a { text-decoration: none; }
+
+    /* ---------- 3. HEADER / NAVIGATION ---------- */
+    header {
+        background: linear-gradient(90deg, #4338ca, #6d28d9, #ec4899);
+        padding: 14px 40px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .logo {
+        color: #ffffff;
+        font-size: 25px;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+
+    .nav-links a {
+        color: #ffffff;
+        margin-left: 22px;
+        font-size: 16px;
+        padding-bottom: 4px;
+        border-bottom: 3px solid transparent;
+        transition: border-color 0.3s, color 0.3s;
+    }
+
+    .nav-links a:hover {
+        color: #fcd34d;
+        border-bottom: 3px solid #fcd34d;
+    }
+
+    /* The theme button (it is really a <label> for the checkbox) */
+    .theme-label {
+        margin-left: 22px;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.3s;
+    }
+
+    .theme-label:hover { background-color: rgba(255, 255, 255, 0.35); }
+
+    #themeSwitch:focus-visible ~ .page .theme-label { outline: 3px solid #fcd34d; }
+
+    .dark-text  { display: none; }
+    #themeSwitch:checked ~ .page .dark-text  { display: inline; }
+    #themeSwitch:checked ~ .page .light-text { display: none; }
+
+    /* ---------- 4. HERO SECTION ---------- */
+    .hero {
+        background: linear-gradient(135deg, #ede9fe, #cffafe, #fce7f3);
+        background-size: 300% 300%;
+        animation: moveBackground 14s ease infinite;
+        padding: 55px 40px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+    }
+
+    #themeSwitch:checked ~ .page .hero {
+        background: linear-gradient(135deg, #1e1b4b, #0f3b3a, #3b1442);
+        background-size: 300% 300%;
+    }
+
+    @keyframes moveBackground {
+        0%   { background-position: 0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .hero-text {
+        max-width: 520px;
+        animation: slideIn 1s ease;
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(30px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-label {
+        display: inline-block;
+        background-color: var(--purple);
+        color: #ffffff;
+        padding: 5px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        letter-spacing: 3px;
+        margin-bottom: 14px;
+    }
+
+    .hero h1 {
+        font-size: 40px;
+        margin: 8px 0 16px 0;
+        color: var(--heading);
+    }
+
+    .hero p {
+        font-size: 18px;
+        color: var(--text-soft);
+        margin-bottom: 26px;
+    }
+
+    .hero-image { animation: floatUpDown 3s ease-in-out infinite; }
+
+    @keyframes floatUpDown {
+        0%   { transform: translateY(0); }
+        50%  { transform: translateY(-16px); }
+        100% { transform: translateY(0); }
+    }
+
+    /* ---------- 5. BUTTONS ---------- */
+    .btn {
+        display: inline-block;
+        padding: 13px 30px;
+        margin: 6px 8px 6px 0;
+        font-size: 16px;
+        border-radius: 30px;
+        transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 18px var(--shadow);
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #6d28d9, #ec4899);
+        color: #ffffff;
+    }
+
+    .btn-secondary {
+        background-color: var(--card);
+        color: var(--teal);
+        border: 2px solid var(--teal);
+    }
+
+    /* ---------- 6. STATS STRIP ---------- */
+    .stats {
+        background: linear-gradient(90deg, #4338ca, #0d9488);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 50px;
+        padding: 30px 40px;
+        text-align: center;
+        color: #ffffff;
+    }
+
+    .stat-number {
+        font-size: 32px;
+        font-weight: bold;
+        display: block;
+    }
+
+    .stat-name { font-size: 15px; }
+
+    /* ---------- 7. COMMON SECTION STYLE ---------- */
+    section { padding: 58px 40px; }
+
+    h2 {
+        font-size: 32px;
+        margin-top: 0;
+        text-align: center;
+        color: var(--heading);
+    }
+
+    .section-note {
+        text-align: center;
+        color: var(--text-soft);
+        max-width: 620px;
+        margin: -6px auto 34px auto;
+    }
+
+    /* ---------- 8. ABOUT SECTION ---------- */
+    .about {
+        max-width: 950px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 34px;
+        justify-content: center;
+    }
+
+    .about-text { flex: 1; min-width: 300px; }
+    .about-text h2 { text-align: left; }
+    .about-text p  { font-size: 17px; color: var(--text-soft); }
+
+    .about-image img {
+        border-radius: 14px;
+        border: 5px solid var(--yellow);
+        display: block;
+    }
+
+    .tick-list {
+        list-style: none;
+        padding-left: 0;
+        color: var(--text-soft);
+    }
+
+    .tick-list li { margin-bottom: 8px; }
+
+    /* ---------- 9. FEATURES SECTION ---------- */
+    .features {
+        background-color: var(--surface);
+        text-align: center;
+    }
+
+    .feature-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
+    }
+
+    .card {
+        background-color: var(--card);
+        border-radius: 16px;
+        padding: 26px 22px;
+        width: 235px;
+        text-align: center;
+        box-shadow: 0 6px 16px var(--shadow);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-10px) scale(1.03);
+        box-shadow: 0 14px 26px var(--shadow);
+    }
+
+    .card1 { border-top: 6px solid var(--purple); }
+    .card2 { border-top: 6px solid var(--teal); }
+    .card3 { border-top: 6px solid var(--orange); }
+    .card4 { border-top: 6px solid var(--pink); }
+    .card5 { border-top: 6px solid var(--indigo); }
+    .card6 { border-top: 6px solid var(--yellow); }
+
+    .card1 h3 { color: var(--purple); }
+    .card2 h3 { color: var(--teal); }
+    .card3 h3 { color: var(--orange); }
+    .card4 h3 { color: var(--pink); }
+    .card5 h3 { color: var(--indigo); }
+    .card6 h3 { color: var(--yellow); }
+
+    .icon {
+        font-size: 34px;
+        display: block;
+        margin-bottom: 12px;
+    }
+
+    .card h3 { font-size: 19px; margin: 0 0 8px 0; }
+
+    .card p {
+        color: var(--text-soft);
+        font-size: 15px;
+        margin-bottom: 0;
+    }
+
+    /* ---------- 10. HOW IT WORKS (a real 3-step order) ---------- */
+    .steps {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
+    }
+
+    .step {
+        background-color: var(--card);
+        border: 2px solid var(--border);
+        border-radius: 16px;
+        padding: 24px;
+        width: 250px;
+    }
+
+    .step-number {
+        display: inline-block;
+        width: 38px;
+        height: 38px;
+        line-height: 38px;
+        text-align: center;
+        border-radius: 50%;
+        background: linear-gradient(90deg, #6d28d9, #ec4899);
+        color: #ffffff;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .step h3 { margin: 6px 0 8px 0; color: var(--heading); font-size: 19px; }
+    .step p  { margin: 0; color: var(--text-soft); font-size: 15px; }
+
+    /* ---------- 11. WHO CAN USE IT ---------- */
+    .roles { background-color: var(--surface); text-align: center; }
+
+    .role-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
+    }
+
+    .role {
+        background-color: var(--card);
+        border-radius: 16px;
+        padding: 26px;
+        width: 260px;
+        text-align: left;
+        box-shadow: 0 6px 16px var(--shadow);
+        transition: transform 0.3s;
+    }
+
+    .role:hover { transform: translateY(-8px); }
+
+    .role h3 { margin-top: 0; color: var(--heading); }
+
+    .role ul {
+        padding-left: 20px;
+        color: var(--text-soft);
+        font-size: 15px;
+        margin-bottom: 0;
+    }
+
+    /* ---------- 12. BOOK CATEGORIES ---------- */
+    .category-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    .category {
+        color: #ffffff;
+        padding: 14px 24px;
+        border-radius: 12px;
+        font-size: 16px;
+        transition: transform 0.3s;
+    }
+
+    .category:hover { transform: rotate(-3deg) scale(1.06); }
+
+    .c1 { background-color: #6d28d9; }
+    .c2 { background-color: #0d9488; }
+    .c3 { background-color: #f97316; }
+    .c4 { background-color: #ec4899; }
+    .c5 { background-color: #4338ca; }
+    .c6 { background-color: #b45309; }
+    .c7 { background-color: #0369a1; }
+    .c8 { background-color: #be123c; }
+
+    /* ---------- 13. FAQ (opens and closes without JavaScript) ---------- */
+    .faq {
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    details {
+        background-color: var(--card);
+        border: 2px solid var(--border);
+        border-left: 6px solid var(--teal);
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-bottom: 14px;
+    }
+
+    summary {
+        cursor: pointer;
+        font-size: 17px;
+        color: var(--heading);
+    }
+
+    details p {
+        color: var(--text-soft);
+        margin-bottom: 0;
+        font-size: 15px;
+    }
+
+    details[open] { border-left-color: var(--pink); }
+
+    /* ---------- 14. CALL TO ACTION BANNER ---------- */
+    .cta-banner {
+        background: linear-gradient(90deg, #6d28d9, #ec4899);
+        color: #ffffff;
+        text-align: center;
+    }
+
+    .cta-banner h2 { color: #ffffff; }
+    .cta-banner p  { margin-bottom: 24px; }
+
+    .cta-banner .btn-secondary {
+        background-color: #ffffff;
+        color: #6d28d9;
+        border: 2px solid #ffffff;
+    }
+
+    /* ---------- 15. FOOTER ---------- */
+    footer {
+        background-color: var(--surface);
+        color: var(--text-soft);
+        padding: 40px 40px 0 40px;
+        border-top: 4px solid var(--purple);
+    }
+
+    .footer-columns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        justify-content: space-between;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .footer-columns h3 {
+        color: var(--heading);
+        font-size: 18px;
+        margin-top: 0;
+    }
+
+    .footer-columns a {
+        color: var(--text-soft);
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .footer-columns a:hover { color: var(--pink); }
+
+    .footer-bottom {
+        text-align: center;
+        margin-top: 30px;
+        padding: 16px;
+        border-top: 1px solid var(--border);
+        font-size: 15px;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- The hidden checkbox that controls the dark / light theme -->
+<input type="checkbox" id="themeSwitch">
+
+<div class="page">
+
+    <!-- ===== HEADER / NAVIGATION ===== -->
+    <header>
+        <nav>
+            <a class="logo" href="index.html">&#128218; E-LIBRARY</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="#about">About</a>
+                <a href="books.html">Books</a>
+                <a href="#faq">FAQ</a>
+                <a href="login.html">Login</a>
+                <label class="theme-label" for="themeSwitch">
+                    <span class="light-text">&#127769; Dark mode</span>
+                    <span class="dark-text">&#9728; Light mode</span>
+                </label>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- ===== HERO SECTION ===== -->
+        <section class="hero">
+
+            <div class="hero-text">
+                <span class="hero-label">E-LIBRARY</span>
+                <h1>Your Digital Library, Anytime, Anywhere</h1>
+                <p>Access, manage, and read books digitally through your organization's online library.</p>
+                <a class="btn btn-primary" href="login.html">Login</a>
+                <a class="btn btn-secondary" href="books.html">Explore Books</a>
+            </div>
+
+            <!-- Picture drawn with SVG, so no extra image file is needed -->
+            <div class="hero-image">
+                <svg width="300" height="240" viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="40" y="150" width="220" height="18" rx="6" fill="#4338ca"/>
+                    <rect x="55" y="70" width="34" height="80" rx="4" fill="#ec4899"/>
+                    <rect x="95" y="50" width="34" height="100" rx="4" fill="#f97316"/>
+                    <rect x="135" y="85" width="34" height="65" rx="4" fill="#0d9488"/>
+                    <rect x="175" y="60" width="34" height="90" rx="4" fill="#6d28d9"/>
+                    <rect x="215" y="95" width="34" height="55" rx="4" fill="#fbbf24"/>
+                    <circle cx="150" cy="30" r="16" fill="#fbbf24"/>
+                    <rect x="112" y="178" width="76" height="48" rx="6" fill="#1f2937"/>
+                    <rect x="120" y="186" width="60" height="32" rx="3" fill="#cffafe"/>
+                </svg>
+            </div>
+
+        </section>
+
+        <!-- ===== STATS STRIP ===== -->
+        <section class="stats">
+            <div><span class="stat-number">5,000+</span><span class="stat-name">Books in the collection</span></div>
+            <div><span class="stat-number">1,200</span><span class="stat-name">Registered students</span></div>
+            <div><span class="stat-number">25</span><span class="stat-name">Subject categories</span></div>
+            <div><span class="stat-number">24 &times; 7</span><span class="stat-name">Library open online</span></div>
+        </section>
+
+        <!-- ===== ABOUT SECTION ===== -->
+        <section id="about">
+            <div class="about">
+
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=380&q=80"
+                         alt="Shelves full of books in a library" width="340">
+                </div>
+
+                <div class="about-text">
+                    <h2>About E-LIBRARY</h2>
+                    <p>
+                        E-LIBRARY is a digital book management and reading system designed for educational
+                        institutions and libraries such as colleges, universities and schools. It allows an
+                        organization to manage its complete book collection in one place, while students can
+                        easily discover and access the books available to them.
+                    </p>
+                    <p>
+                        Instead of depending only on physical shelves and registers, the organization keeps
+                        its collection online, and every registered student can reach that collection from
+                        any device at any time.
+                    </p>
+                    <ul class="tick-list">
+                        <li>&#9989; One place for the whole book collection</li>
+                        <li>&#9989; Separate logins for students, librarians and administrators</li>
+                        <li>&#9989; No paper registers, no lost records</li>
+                        <li>&#9989; Works on a computer, tablet or mobile phone</li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===== FEATURES SECTION ===== -->
+        <section class="features">
+            <h2>Why Use E-LIBRARY?</h2>
+            <p class="section-note">Six reasons an institution moves its library online.</p>
+
+            <div class="feature-list">
+
+                <article class="card card1">
+                    <span class="icon">&#128218;</span>
+                    <h3>Digital Book Collection</h3>
+                    <p>Access books available in your organization digitally.</p>
+                </article>
+
+                <article class="card card2">
+                    <span class="icon">&#128203;</span>
+                    <h3>Easy Book Management</h3>
+                    <p>Organizations can maintain and manage their digital book collection.</p>
+                </article>
+
+                <article class="card card3">
+                    <span class="icon">&#128241;</span>
+                    <h3>Easy Access</h3>
+                    <p>Students can access their organization's library from a convenient digital platform.</p>
+                </article>
+
+                <article class="card card4">
+                    <span class="icon">&#128214;</span>
+                    <h3>Online Reading</h3>
+                    <p>Read available books digitally without needing to carry physical books.</p>
+                </article>
+
+                <article class="card card5">
+                    <span class="icon">&#128269;</span>
+                    <h3>Quick Search</h3>
+                    <p>Find a book by its title, author or subject instead of walking along the shelves.</p>
+                </article>
+
+                <article class="card card6">
+                    <span class="icon">&#128272;</span>
+                    <h3>Safe Login</h3>
+                    <p>Only members of the organization can open the library, using their own user account.</p>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ===== HOW IT WORKS ===== -->
+        <section>
+            <h2>How E-LIBRARY Works</h2>
+            <p class="section-note">Three steps take a student from the login page to a book.</p>
+
+            <div class="steps">
+
+                <article class="step">
+                    <span class="step-number">1</span>
+                    <h3>Login to your account</h3>
+                    <p>Enter your Email or User ID, your password, and choose whether you are a student,
+                       a librarian or an administrator.</p>
+                </article>
+
+                <article class="step">
+                    <span class="step-number">2</span>
+                    <h3>Search the collection</h3>
+                    <p>Browse the subject categories or search by title and author to see which books your
+                       organization has added.</p>
+                </article>
+
+                <article class="step">
+                    <span class="step-number">3</span>
+                    <h3>Open and read</h3>
+                    <p>Open the book you need and read it on screen. Nothing has to be carried home and
+                       nothing can be lost.</p>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ===== WHO CAN USE IT ===== -->
+        <section class="roles">
+            <h2>Who Can Use E-LIBRARY?</h2>
+            <p class="section-note">The system has three types of users, and each one sees a different set
+               of options after login.</p>
+
+            <div class="role-list">
+
+                <article class="role">
+                    <h3>&#127891; Student</h3>
+                    <ul>
+                        <li>Search the book collection</li>
+                        <li>Read available books online</li>
+                        <li>Keep a list of favourite books</li>
+                    </ul>
+                </article>
+
+                <article class="role">
+                    <h3>&#128100; Librarian</h3>
+                    <ul>
+                        <li>Add, edit and remove books</li>
+                        <li>Sort books into categories</li>
+                        <li>Check which books are being read</li>
+                    </ul>
+                </article>
+
+                <article class="role">
+                    <h3>&#9881; Administrator</h3>
+                    <ul>
+                        <li>Create and manage user accounts</li>
+                        <li>Control who can access what</li>
+                        <li>View reports for the organization</li>
+                    </ul>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ===== BOOK CATEGORIES ===== -->
+        <section>
+            <h2>Browse by Subject</h2>
+            <p class="section-note">Books are grouped into categories so a student can reach the right
+               shelf in one click.</p>
+
+            <div class="category-list">
+                <a class="category c1" href="books.html">Computer Science</a>
+                <a class="category c2" href="books.html">Mathematics</a>
+                <a class="category c3" href="books.html">Science</a>
+                <a class="category c4" href="books.html">Literature</a>
+                <a class="category c5" href="books.html">Management</a>
+                <a class="category c6" href="books.html">History</a>
+                <a class="category c7" href="books.html">Competitive Exams</a>
+                <a class="category c8" href="books.html">General Reading</a>
+            </div>
+        </section>
+
+        <!-- ===== FAQ ===== -->
+        <section id="faq" class="features">
+            <h2>Common Questions</h2>
+            <p class="section-note">Click a question to open the answer.</p>
+
+            <div class="faq">
+
+                <details open>
+                    <summary>Who can create an account on E-LIBRARY?</summary>
+                    <p>Accounts are created for members of the organization only. A college gives accounts
+                       to its own students, librarians and administrators.</p>
+                </details>
+
+                <details>
+                    <summary>Do I have to install any software?</summary>
+                    <p>No. E-LIBRARY opens in a normal web browser on a computer, tablet or mobile phone.</p>
+                </details>
+
+                <details>
+                    <summary>Can two students read the same book at the same time?</summary>
+                    <p>Yes. A digital copy does not have to be returned before the next student can open it.</p>
+                </details>
+
+                <details>
+                    <summary>What happens if I forget my password?</summary>
+                    <p>Use the "Forgot Password?" link on the login page, or contact the librarian of your
+                       organization.</p>
+                </details>
+
+            </div>
+        </section>
+
+        <!-- ===== CALL TO ACTION ===== -->
+        <section class="cta-banner">
+            <h2>Ready to open your digital library?</h2>
+            <p>Login with your organization account and start reading today.</p>
+            <a class="btn btn-secondary" href="login.html">Login to E-LIBRARY</a>
+        </section>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-columns">
+
+            <div>
+                <h3>E-LIBRARY</h3>
+                <p>An online book management and reading system for colleges, universities, schools
+                   and libraries.</p>
+            </div>
+
+            <div>
+                <h3>Pages</h3>
+                <a href="index.html">Home</a>
+                <a href="#about">About</a>
+                <a href="books.html">Books</a>
+                <a href="login.html">Login</a>
+            </div>
+
+            <div>
+                <h3>Help</h3>
+                <a href="#faq">Common questions</a>
+                <a href="#">Contact librarian</a>
+                <a href="#">User guide</a>
+            </div>
+
+        </div>
+
+        <p class="footer-bottom">&copy; 2026 E-LIBRARY | Online Book Management and Reading System</p>
+    </footer>
+
+</div>
+
+</body>
+</html>

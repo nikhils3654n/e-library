@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | E-LIBRARY</title>
+
+<style>
+    /* =========================================================
+       E-LIBRARY  -  LOGIN PAGE STYLE
+       Only HTML + CSS. No JavaScript.
+       ========================================================= */
+
+    /* ---------- LIGHT THEME (default) ---------- */
+    .page {
+        --bg:        #f5f3ff;
+        --card:      #ffffff;
+        --field:     #faf9ff;
+        --text:      #1f2937;
+        --text-soft: #6b7280;
+        --heading:   #4338ca;
+        --border:    #ddd6fe;
+        --shadow:    rgba(67, 56, 202, 0.22);
+
+        --purple: #6d28d9;
+        --teal:   #0d9488;
+        --orange: #f97316;
+        --pink:   #ec4899;
+        --yellow: #fbbf24;
+    }
+
+    /* ---------- DARK THEME ---------- */
+    #themeSwitch:checked ~ .page {
+        --bg:        #0f172a;
+        --card:      #1e293b;
+        --field:     #0f172a;
+        --text:      #e5e7eb;
+        --text-soft: #a5b4cf;
+        --heading:   #c4b5fd;
+        --border:    #4c1d95;
+        --shadow:    rgba(0, 0, 0, 0.55);
+
+        --purple: #a78bfa;
+        --teal:   #2dd4bf;
+        --orange: #fb923c;
+        --pink:   #f472b6;
+        --yellow: #fcd34d;
+    }
+
+    #themeSwitch {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    body {
+        margin: 0;
+        font-family: "Trebuchet MS", Verdana, sans-serif;
+        line-height: 1.6;
+    }
+
+    .page {
+        background-color: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        transition: background-color 0.4s, color 0.4s;
+    }
+
+    a { text-decoration: none; }
+
+    /* ---------- HEADER / NAVIGATION ---------- */
+    header {
+        background: linear-gradient(90deg, #4338ca, #6d28d9, #ec4899);
+        padding: 14px 40px;
+    }
+
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .logo {
+        color: #ffffff;
+        font-size: 25px;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+
+    .nav-links a {
+        color: #ffffff;
+        margin-left: 22px;
+        font-size: 16px;
+        padding-bottom: 4px;
+        border-bottom: 3px solid transparent;
+        transition: border-color 0.3s, color 0.3s;
+    }
+
+    .nav-links a:hover {
+        color: #fcd34d;
+        border-bottom: 3px solid #fcd34d;
+    }
+
+    .theme-label {
+        margin-left: 22px;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 0.3s;
+    }
+
+    .theme-label:hover { background-color: rgba(255, 255, 255, 0.35); }
+
+    #themeSwitch:focus-visible ~ .page .theme-label { outline: 3px solid #fcd34d; }
+
+    .dark-text  { display: none; }
+    #themeSwitch:checked ~ .page .dark-text  { display: inline; }
+    #themeSwitch:checked ~ .page .light-text { display: none; }
+
+    /* ---------- PAGE BODY: FORM ON THE LEFT, INFO ON THE RIGHT ---------- */
+    .login-area {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        padding: 50px 30px;
+        background: linear-gradient(135deg, #ede9fe, #cffafe, #fce7f3);
+        background-size: 300% 300%;
+        animation: moveBackground 14s ease infinite;
+    }
+
+    #themeSwitch:checked ~ .page .login-area {
+        background: linear-gradient(135deg, #1e1b4b, #0f3b3a, #3b1442);
+        background-size: 300% 300%;
+    }
+
+    @keyframes moveBackground {
+        0%   { background-position: 0% 50%; }
+        50%  { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* ---------- LOGIN BOX ---------- */
+    .login-box {
+        background-color: var(--card);
+        width: 380px;
+        padding: 32px;
+        border-radius: 18px;
+        border-top: 7px solid var(--purple);
+        box-shadow: 0 14px 34px var(--shadow);
+        animation: popIn 0.8s ease;
+    }
+
+    @keyframes popIn {
+        from { opacity: 0; transform: translateY(35px) scale(0.96); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .login-icon {
+        display: block;
+        text-align: center;
+        font-size: 44px;
+        animation: floatUpDown 3s ease-in-out infinite;
+    }
+
+    @keyframes floatUpDown {
+        0%   { transform: translateY(0); }
+        50%  { transform: translateY(-10px); }
+        100% { transform: translateY(0); }
+    }
+
+    .login-box h1 {
+        font-size: 25px;
+        text-align: center;
+        margin: 6px 0 4px 0;
+        color: var(--heading);
+    }
+
+    .subtitle {
+        text-align: center;
+        color: var(--text-soft);
+        margin: 0 0 24px 0;
+        font-size: 16px;
+    }
+
+    label {
+        display: block;
+        color: var(--purple);
+        font-size: 15px;
+        margin-bottom: 6px;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 11px;
+        margin-bottom: 18px;
+        font-size: 15px;
+        font-family: "Trebuchet MS", Verdana, sans-serif;
+        color: var(--text);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        box-sizing: border-box;
+        background-color: var(--field);
+        transition: border-color 0.3s;
+    }
+
+    input:focus, select:focus {
+        outline: none;
+        border-color: var(--teal);
+    }
+
+    .remember {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 15px;
+        color: var(--text-soft);
+        margin-bottom: 18px;
+    }
+
+    .remember input {
+        width: auto;
+        margin: 0;
+    }
+
+    .remember label { color: var(--text-soft); margin: 0; }
+
+    .login-btn {
+        width: 100%;
+        padding: 13px;
+        background: linear-gradient(90deg, #6d28d9, #ec4899);
+        color: #ffffff;
+        font-size: 17px;
+        letter-spacing: 2px;
+        font-family: "Trebuchet MS", Verdana, sans-serif;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .login-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 18px var(--shadow);
+    }
+
+    /* ---------- LINKS BELOW THE FORM ---------- */
+    .form-links {
+        text-align: center;
+        font-size: 15px;
+        color: var(--text-soft);
+    }
+
+    .form-links a { color: var(--teal); }
+    .form-links a:hover { color: var(--orange); }
+
+    .forgot { margin: 18px 0 8px 0; }
+
+    .back-home { text-align: center; margin-top: 20px; }
+    .back-home a { color: var(--purple); font-size: 15px; }
+
+    /* ---------- SIDE PANEL ---------- */
+    .side-panel {
+        width: 330px;
+        color: var(--text);
+    }
+
+    .side-panel h2 {
+        color: var(--heading);
+        font-size: 26px;
+        margin-top: 0;
+    }
+
+    .side-panel p { color: var(--text-soft); }
+
+    .role-help {
+        background-color: var(--card);
+        border-radius: 14px;
+        padding: 18px 20px;
+        box-shadow: 0 8px 20px var(--shadow);
+        margin-top: 20px;
+    }
+
+    .role-help h3 {
+        margin: 0 0 10px 0;
+        color: var(--heading);
+        font-size: 18px;
+    }
+
+    .role-help ul {
+        padding-left: 20px;
+        margin: 0;
+        color: var(--text-soft);
+        font-size: 15px;
+    }
+
+    .role-help li { margin-bottom: 6px; }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+        background: linear-gradient(90deg, #4338ca, #6d28d9, #ec4899);
+        color: #ffffff;
+        text-align: center;
+        padding: 22px 20px;
+        font-size: 15px;
+    }
+</style>
+<script src="auth.js"></script>
+</head>
+
+<body>
+
+<!-- The hidden checkbox that controls the dark / light theme -->
+<input type="checkbox" id="themeSwitch">
+
+<div class="page">
+
+    <!-- ===== HEADER / NAVIGATION ===== -->
+    <header>
+        <nav>
+            <a class="logo" href="index.html">&#128218; E-LIBRARY</a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#about">About</a>
+                <a href="books.html">Books</a>
+                <a href="index.html#faq">FAQ</a>
+                <a href="login.html">Login</a>
+                <label class="theme-label" for="themeSwitch">
+                    <span class="light-text">&#127769; Dark mode</span>
+                    <span class="dark-text">&#9728; Light mode</span>
+                </label>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="login-area">
+
+            <!-- ===== LOGIN BOX ===== -->
+            <section class="login-box">
+
+                <span class="login-icon">&#128273;</span>
+                <h1>Welcome Back to E-LIBRARY</h1>
+                <p class="subtitle">Login to access your digital library</p>
+
+                <div class="demo-login">
+                    <strong>Demo Student Login</strong><br>
+                    User ID: <strong>nikhil</strong><br>
+                    Password: <strong>Nikhil@123</strong><br>
+                    User Type: <strong>Student</strong>
+                </div>
+
+                <div id="loginMessage" aria-live="polite"></div>
+
+                <form action="#" method="post" onsubmit="return loginUser(event);">
+
+                    <label for="userid">Email / User ID</label>
+                    <input type="text" id="userid" name="userid" placeholder="Enter your Email or User ID">
+
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your Password">
+
+                    <label for="usertype">User Type</label>
+                    <select id="usertype" name="usertype">
+                        <option value="student">Student</option>
+                        <option value="librarian">Librarian</option>
+                        <option value="administrator">Administrator</option>
+                    </select>
+
+                    <div class="remember">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Keep me signed in on this device</label>
+                    </div>
+
+                    <button type="submit" class="login-btn">LOGIN</button>
+
+                </form>
+
+                <div class="form-links">
+                    <p class="forgot"><a href="forgot-password.html">Forgot Password?</a></p>
+                    <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+                </div>
+
+                <div class="back-home">
+                    <a href="index.html">&larr; Back to Home</a>
+                </div>
+
+            </section>
+
+            <!-- ===== SIDE PANEL ===== -->
+            <aside class="side-panel">
+                <h2>One library, three kinds of user</h2>
+                <p>Choose the correct user type before you login. The system shows different options to
+                   each type of user.</p>
+
+                <div class="role-help">
+                    <h3>Which user type do I choose?</h3>
+                    <ul>
+                        <li><strong>Student</strong> &ndash; search and read the books of your organization.</li>
+                        <li><strong>Librarian</strong> &ndash; add, edit and organise the book collection.</li>
+                        <li><strong>Administrator</strong> &ndash; manage user accounts and view reports.</li>
+                    </ul>
+                </div>
+
+                <div class="role-help">
+                    <h3>Trouble signing in?</h3>
+                    <ul>
+                        <li>Check that Caps Lock is off before typing your password.</li>
+                        <li>Use the User ID given by your organization, not a personal email.</li>
+                        <li>Still stuck? Contact the librarian of your institution.</li>
+                    </ul>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <p>&copy; 2026 E-LIBRARY | Online Book Management and Reading System</p>
+    </footer>
+
+</div>
+
+<script>
+const params=new URLSearchParams(location.search);
+const msg=document.getElementById('loginMessage');
+if(msg && params.get('required')==='1'){msg.textContent='Please login first to access the Student Portal.';msg.className='auth-message error';}
+if(msg && params.get('signup')==='1'){msg.textContent='Account created. Please login with your new account.';msg.className='auth-message success';}
+if(msg && params.get('logout')==='1'){msg.textContent='You have been logged out successfully.';msg.className='auth-message success';}
+</script>
+</body>
+</html>

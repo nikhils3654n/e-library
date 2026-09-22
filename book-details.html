@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Book Details | E-LIBRARY</title><link rel="stylesheet" href="style.css">
+<script src="books-data.js"></script><script src="auth.js"></script>
+<script>protectPage();</script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="dashboard.html"><span class="brand-icon">📖</span>E-LIBRARY</a>
+<nav class="nav"><a class="" href="dashboard.html">Dashboard</a><a class="" href="books.html">Browse Books</a><a class="" href="search.html">Search & Filter</a><a class="" href="my-library.html">My Library</a><a class="" href="favorites.html">Favorites</a><a class="" href="history.html">Reading History</a><a class="" href="reader.html">Online Reader</a><a href="login.html" data-logout>Logout</a></nav></header>
+
+<main class="container">
+<div class="page-head" id="pageHead"></div>
+<div id="bookDetailArea"></div>
+<div class="section-title"><h2>Related Books</h2></div>
+<div class="grid-3" id="relatedGrid"></div>
+</main>
+
+<footer class="footer"><strong>E-LIBRARY</strong><p>Online Book Management and Reading System • Student Portal</p></footer>
+
+<script>
+function renderBookDetails() {
+  const params = new URLSearchParams(location.search);
+  const book = getBookById(params.get("id"));
+
+  const head = document.getElementById("pageHead");
+  const area = document.getElementById("bookDetailArea");
+  const related = document.getElementById("relatedGrid");
+
+  if (!book) {
+    head.innerHTML = `<h1>Book Not Found</h1><p>This book is not in the catalog.</p>`;
+    area.innerHTML = `<a class="btn btn-primary" href="books.html">← Back to Browse Books</a>`;
+    related.innerHTML = "";
+    return;
+  }
+
+  head.innerHTML = `<h1>${book.title}</h1><p>${book.category} • ${book.author}</p>`;
+
+  const favored = isFavorite(book.id);
+
+  area.innerHTML = `
+    <div class="card book-detail-wrap">
+      <div class="book-cover book-detail-cover">${book.cover}</div>
+      <div class="book-detail-info">
+        <span class="badge ${book.status}">${statusLabel(book.status)}</span>
+        <p style="margin-top:14px;color:var(--muted);line-height:1.7">${book.description}</p>
+        ${book.dueDate ? `<p><strong>Due date:</strong> ${book.dueDate}</p>` : ""}
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+          ${book.status === "available"
+            ? `<a class="btn btn-primary" href="reader.html">Read Online</a>`
+            : `<a class="btn btn-light" href="my-library.html">View in My Library</a>`}
+          <button type="button" class="fav-toggle ${favored ? "active" : ""}" id="favToggleBtn" onclick="handleFavToggle(${book.id})">
+            ${favored ? "❤️ Saved to Favorites" : "🤍 Add to Favorites"}
+          </button>
+          <a class="btn btn-light" href="books.html">← Back to Browse Books</a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const relatedBooks = BOOKS.filter(b => b.category === book.category && b.id !== book.id);
+  related.innerHTML = relatedBooks.length ? relatedBooks.map(b => `
+    <div class="card book-card">
+      <a href="book-details.html?id=${b.id}"><div class="book-cover">${b.cover}</div></a>
+      <h3><a href="book-details.html?id=${b.id}" style="color:inherit">${b.title}</a></h3>
+      <p>Author: ${b.author}</p>
+      <span class="badge ${b.status}">${statusLabel(b.status)}</span>
+    </div>
+  `).join("") : `<p style="color:var(--muted)">No other books in this category yet.</p>`;
+}
+
+function handleFavToggle(id) {
+  const nowFav = toggleFavorite(id);
+  const btn = document.getElementById("favToggleBtn");
+  btn.classList.toggle("active", nowFav);
+  btn.textContent = nowFav ? "❤️ Saved to Favorites" : "🤍 Add to Favorites";
+}
+
+document.addEventListener("DOMContentLoaded", renderBookDetails);
+</script>
+</body></html>

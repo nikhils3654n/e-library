@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Manage Librarians | E-LIBRARY</title><link rel="stylesheet" href="style.css">
+<script src="auth.js"></script>
+<script>protectPage();</script>
+<style>
+.role-pill{display:inline-block;background:linear-gradient(90deg,var(--secondary),var(--pink));color:#fff;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.5px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="admin-dashboard.html"><span class="brand-icon">📖</span>E-LIBRARY</a>
+<nav class="nav"><a href="admin-dashboard.html">Dashboard</a><a href="manage-users.html">Manage Users</a><a class="active" href="manage-librarians.html">Manage Librarians</a><a href="manage-books.html">Manage Books</a><a href="admin-reports.html">Reports</a><a href="login.html" data-logout>Logout</a></nav></header>
+
+<main class="container">
+<span class="role-pill">⚙ Admin Portal</span>
+<div class="page-head"><h1>Manage Librarians</h1><p>Review current librarians or add a new one to the organization.</p></div>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--primary)">Add a Librarian</h3>
+<div id="addLibrarianMessage"></div>
+<form id="addLibrarianForm" class="form">
+  <label>Full Name<input type="text" id="librarianName" placeholder="Enter full name" required></label>
+  <label>Email<input type="email" id="librarianEmail" placeholder="Enter email address" required></label>
+  <label>Assigned Category
+    <select id="librarianCategory">
+      <option>General Collection</option><option>Programming</option><option>Computer Science</option>
+      <option>Science</option><option>Mathematics</option><option>History</option>
+    </select>
+  </label>
+  <button type="submit" class="btn btn-primary">ADD LIBRARIAN</button>
+</form>
+</div>
+
+<div class="section-title"><h2>Current Librarians</h2></div>
+<div class="table-wrap"><table class="table" id="librariansTable"></table></div>
+</main>
+
+<footer class="footer"><strong>E-LIBRARY</strong><p>Online Book Management and Reading System • Admin Portal</p></footer>
+
+<script>
+const LIBRARIANS = [
+  { id: 1, name: "Meera Iyer", email: "meera.iyer@elibrary.demo", category: "Programming", active: true },
+  { id: 2, name: "Rahul Verma", email: "rahul.verma@elibrary.demo", category: "Science", active: true },
+  { id: 3, name: "Sana Sheikh", email: "sana.sheikh@elibrary.demo", category: "History", active: true }
+];
+
+function renderLibrarians() {
+  const table = document.getElementById("librariansTable");
+  table.innerHTML = `<tr><th>Name</th><th>Email</th><th>Assigned Category</th><th>Status</th><th>Action</th></tr>` +
+    LIBRARIANS.map(l => `
+      <tr>
+        <td>${l.name}</td>
+        <td>${l.email}</td>
+        <td>${l.category}</td>
+        <td><span class="badge ${l.active ? "available" : "borrowed"}">${l.active ? "Active" : "Deactivated"}</span></td>
+        <td><a class="btn ${l.active ? "btn-light" : "btn-primary"}" href="#" onclick="toggleLibrarian(event, ${l.id})">${l.active ? "Deactivate" : "Activate"}</a></td>
+      </tr>
+    `).join("");
+}
+
+function toggleLibrarian(event, id) {
+  event.preventDefault();
+  const librarian = LIBRARIANS.find(l => l.id === id);
+  if (librarian) librarian.active = !librarian.active;
+  renderLibrarians();
+}
+
+document.getElementById("addLibrarianForm").addEventListener("submit", function (event) {
+  event.preventDefault();
+  const name = document.getElementById("librarianName").value.trim();
+  const email = document.getElementById("librarianEmail").value.trim();
+  const category = document.getElementById("librarianCategory").value;
+  const message = document.getElementById("addLibrarianMessage");
+
+  if (!name || !email) {
+    message.innerHTML = `<div class="auth-message error">Please enter both a name and an email address.</div>`;
+    return;
+  }
+
+  const newId = Math.max(...LIBRARIANS.map(l => l.id)) + 1;
+  LIBRARIANS.push({ id: newId, name, email, category, active: true });
+
+  message.innerHTML = `<div class="auth-message success">${name} was added as a librarian for ${category}.</div>`;
+  this.reset();
+  renderLibrarians();
+});
+
+document.addEventListener("DOMContentLoaded", renderLibrarians);
+</script>
+</body></html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Reading History | E-LIBRARY</title><link rel="stylesheet" href="style.css"><script src="auth.js"></script>
+<script>protectPage();</script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="dashboard.html"><span class="brand-icon">📖</span>E-LIBRARY</a>
+<nav class="nav"><a class="" href="dashboard.html">Dashboard</a><a class="" href="books.html">Browse Books</a><a class="" href="search.html">Search & Filter</a><a class="" href="my-library.html">My Library</a><a class="" href="favorites.html">Favorites</a><a class="active" href="history.html">Reading History</a><a class="" href="reader.html">Online Reader</a><a href="login.html" data-logout>Logout</a></nav></header>
+<main class="container">
+<div class="page-head"><h1>📚 Reading History</h1><p>Track your reading activity and continue from your last page.</p></div>
+<div class="table-wrap"><table class="table"><tr><th>Book</th><th>Started</th><th>Last Read</th><th>Progress</th><th>Action</th></tr>
+<tr><td>Python Programming</td><td>10 Sep 2026</td><td>18 Sep 2026</td><td><div style="min-width:150px">68%<div class="progress"><span style="width:68%"></span></div></div></td><td><a class="btn btn-primary" href="reader.html">Continue</a></td></tr>
+<tr><td>Artificial Intelligence</td><td>12 Sep 2026</td><td>16 Sep 2026</td><td><div style="min-width:150px">42%<div class="progress"><span style="width:42%"></span></div></div></td><td><a class="btn btn-primary" href="reader.html">Continue</a></td></tr>
+<tr><td>Database Systems</td><td>08 Sep 2026</td><td>09 Sep 2026</td><td><div style="min-width:150px">18%<div class="progress"><span style="width:18%"></span></div></div></td><td><a class="btn btn-primary" href="reader.html">Continue</a></td></tr>
+</table></div>
+<div class="notice" style="margin-top:20px">Your reading progress can be stored in the database later using the <strong>READING_HISTORY</strong> table from your ER diagram.</div>
+</main>
+<footer class="footer"><strong>E-LIBRARY</strong><p>Online Book Management and Reading System • Student Portal</p></footer>
+</body></html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Issue / Return | E-LIBRARY</title><link rel="stylesheet" href="style.css">
+<script src="books-data.js"></script><script src="auth.js"></script>
+<script>protectPage();</script>
+<style>
+.role-pill{display:inline-block;background:linear-gradient(90deg,var(--primary),var(--secondary));color:#fff;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.5px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="librarian-dashboard.html"><span class="brand-icon">📖</span>E-LIBRARY</a>
+<nav class="nav"><a href="librarian-dashboard.html">Dashboard</a><a href="add-book.html">Add Book</a><a href="manage-books.html">Manage Books</a><a class="active" href="issue-return.html">Issue/Return</a><a href="librarian-reports.html">Reports</a><a href="login.html" data-logout>Logout</a></nav></header>
+
+<main class="container">
+<span class="role-pill">🧑‍💼 Librarian Portal</span>
+<div class="page-head"><h1>Issue / Return</h1><p>Issue an available book to a student, or mark a borrowed book as returned.</p></div>
+
+<div class="card">
+<h3 style="margin-top:0;color:var(--primary)">Issue a Book</h3>
+<div id="issueMessage"></div>
+<form id="issueForm" class="form">
+  <label>Book
+    <select id="issueBook" required></select>
+  </label>
+  <label>Student Name<input type="text" id="studentName" placeholder="Enter student name" required></label>
+  <label>Student ID<input type="text" id="studentId" placeholder="Enter student ID" required></label>
+  <label>Due Date<input type="date" id="dueDate" required></label>
+  <button type="submit" class="btn btn-primary">ISSUE BOOK</button>
+</form>
+</div>
+
+<div class="section-title"><h2>Currently Issued Books</h2></div>
+<div class="table-wrap"><table class="table" id="issuedTable"></table></div>
+</main>
+
+<footer class="footer"><strong>E-LIBRARY</strong><p>Online Book Management and Reading System • Librarian Portal</p></footer>
+
+<script>
+function defaultDueDate() {
+  const d = new Date();
+  d.setDate(d.getDate() + 14);
+  return d.toISOString().slice(0, 10);
+}
+
+function populateBookSelect() {
+  const select = document.getElementById("issueBook");
+  const available = BOOKS.filter(b => b.status === "available");
+  select.innerHTML = available.length
+    ? available.map(b => `<option value="${b.id}">${b.title} (${b.category})</option>`).join("")
+    : `<option value="">No books are currently available</option>`;
+  document.getElementById("dueDate").value = defaultDueDate();
+}
+
+function renderIssuedTable() {
+  const issued = BOOKS.filter(b => b.status === "borrowed");
+  const table = document.getElementById("issuedTable");
+  table.innerHTML = `<tr><th>Book</th><th>Category</th><th>Due Date</th><th>Action</th></tr>` +
+    (issued.length ? issued.map(b => `
+      <tr>
+        <td>${b.title}</td>
+        <td>${b.category}</td>
+        <td>${b.dueDate || "-"}</td>
+        <td><a class="btn btn-primary" href="#" onclick="returnBook(event, ${b.id})">Mark Returned</a></td>
+      </tr>
+    `).join("") : `<tr><td colspan="4" style="color:var(--muted)">No books are currently issued.</td></tr>`);
+}
+
+document.getElementById("issueForm").addEventListener("submit", function (event) {
+  event.preventDefault();
+  const bookId = Number(document.getElementById("issueBook").value);
+  const book = getBookById(bookId);
+  const message = document.getElementById("issueMessage");
+
+  if (!book) {
+    message.innerHTML = `<div class="auth-message error">Please choose a book to issue.</div>`;
+    return;
+  }
+
+  book.status = "borrowed";
+  book.dueDate = document.getElementById("dueDate").value;
+
+  const name = document.getElementById("studentName").value.trim();
+  message.innerHTML = `<div class="auth-message success">"${book.title}" was issued to ${name}. Due back on ${book.dueDate}.</div>`;
+
+  this.reset();
+  populateBookSelect();
+  renderIssuedTable();
+});
+
+function returnBook(event, id) {
+  event.preventDefault();
+  const book = getBookById(id);
+  if (!book) return;
+  book.status = "available";
+  delete book.dueDate;
+  populateBookSelect();
+  renderIssuedTable();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  populateBookSelect();
+  renderIssuedTable();
+});
+</script>
+</body></html>

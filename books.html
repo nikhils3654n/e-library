@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Browse Books | E-LIBRARY</title><link rel="stylesheet" href="style.css">
+<script src="books-data.js"></script><script src="auth.js"></script>
+<script>protectPage();</script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="dashboard.html"><span class="brand-icon">📖</span>E-LIBRARY</a>
+<nav class="nav"><a class="" href="dashboard.html">Dashboard</a><a class="active" href="books.html">Browse Books</a><a class="" href="search.html">Search & Filter</a><a class="" href="my-library.html">My Library</a><a class="" href="favorites.html">Favorites</a><a class="" href="history.html">Reading History</a><a class="" href="reader.html">Online Reader</a><a href="login.html" data-logout>Logout</a></nav></header>
+<main class="container">
+<div class="page-head"><h1>Browse Books</h1><p>Explore books available in your organization. Tap the heart on any book to save it to Favorites.</p></div>
+<div class="searchbar">
+  <div class="grow"><input type="text" id="bookSearch" placeholder="Search by title or author" oninput="renderBooks()"></div>
+  <select id="categoryFilter" style="max-width:220px" onchange="renderBooks()">
+    <option value="">All Categories</option>
+    <option>Programming</option><option>Computer Science</option><option>Science</option><option>Mathematics</option><option>History</option>
+  </select>
+  <button class="btn btn-primary" onclick="renderBooks()">Search</button>
+</div>
+<div class="grid-3" id="booksGrid"></div>
+</main>
+<footer class="footer"><strong>E-LIBRARY</strong><p>Online Book Management and Reading System • Student Portal</p></footer>
+
+<script>
+function renderBooks() {
+  const q = (document.getElementById("bookSearch").value || "").toLowerCase().trim();
+  const category = document.getElementById("categoryFilter").value;
+  const grid = document.getElementById("booksGrid");
+
+  const filtered = BOOKS.filter(book => {
+    const matchesQuery = !q || book.title.toLowerCase().includes(q) || book.author.toLowerCase().includes(q);
+    const matchesCategory = !category || book.category === category;
+    return matchesQuery && matchesCategory;
+  });
+
+  grid.innerHTML = filtered.length ? filtered.map(book => `
+    <div class="card book-card">
+      <button type="button" class="heart-btn" onclick="handleFavoriteClick(event, ${book.id})" aria-label="Toggle favorite">${isFavorite(book.id) ? "❤️" : "🤍"}</button>
+      <a href="book-details.html?id=${book.id}"><div class="book-cover">${book.cover}</div></a>
+      <h3><a href="book-details.html?id=${book.id}" style="color:inherit">${book.title}</a></h3>
+      <p>Author: ${book.author}</p>
+      <p>Category: ${book.category}</p>
+      <span class="badge ${book.status}">${statusLabel(book.status)}</span><br>
+      ${book.status === "available"
+        ? `<a class="btn btn-primary" style="margin-top:10px" href="reader.html">Read Online</a>`
+        : `<a class="btn btn-light" style="margin-top:10px" href="my-library.html">View Status</a>`}
+    </div>
+  `).join("") : `<p style="color:var(--muted)">No books match your search.</p>`;
+}
+
+function handleFavoriteClick(event, id) {
+  event.preventDefault();
+  event.stopPropagation();
+  toggleFavorite(id);
+  renderBooks();
+}
+
+document.addEventListener("DOMContentLoaded", renderBooks);
+</script>
+</body></html>

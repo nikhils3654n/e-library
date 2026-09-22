@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Manage Users | E-LIBRARY</title><link rel="stylesheet" href="style.css">
+<script src="auth.js"></script>
+<script>protectPage();</script>
+<style>
+.role-pill{display:inline-block;background:linear-gradient(90deg,var(--secondary),var(--pink));color:#fff;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.5px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="admin-dashboard.html"><span class="brand-icon">📖</span>E-LIBRARY</a>
+<nav class="nav"><a href="admin-dashboard.html">Dashboard</a><a class="active" href="manage-users.html">Manage Users</a><a href="manage-librarians.html">Manage Librarians</a><a href="manage-books.html">Manage Books</a><a href="admin-reports.html">Reports</a><a href="login.html" data-logout>Logout</a></nav></header>
+
+<main class="container">
+<span class="role-pill">⚙ Admin Portal</span>
+<div class="page-head"><h1>Manage Users</h1><p>Review accounts and activate or deactivate access. Changes apply for this session only.</p></div>
+
+<div class="searchbar">
+  <div class="grow"><input type="text" id="userSearch" placeholder="Search by name or email" oninput="renderUsers()"></div>
+  <select id="roleFilter" style="max-width:200px" onchange="renderUsers()">
+    <option value="">All Roles</option>
+    <option value="Student">Student</option>
+    <option value="Librarian">Librarian</option>
+    <option value="Administrator">Administrator</option>
+  </select>
+</div>
+
+<div class="table-wrap"><table class="table" id="usersTable"></table></div>
+</main>
+
+<footer class="footer"><strong>E-LIBRARY</strong><p>Online Book Management and Reading System • Admin Portal</p></footer>
+
+<script>
+const USERS = [
+  { id: 1, name: "Nikhil", email: "nikhil@elibrary.demo", role: "Student", active: true },
+  { id: 2, name: "Asha Rao", email: "asha.rao@elibrary.demo", role: "Student", active: true },
+  { id: 3, name: "Vikram Shah", email: "vikram.shah@elibrary.demo", role: "Student", active: false },
+  { id: 4, name: "Meera Iyer", email: "meera.iyer@elibrary.demo", role: "Librarian", active: true },
+  { id: 5, name: "Rahul Verma", email: "rahul.verma@elibrary.demo", role: "Librarian", active: true },
+  { id: 6, name: "Admin Office", email: "admin@elibrary.demo", role: "Administrator", active: true }
+];
+
+function renderUsers() {
+  const q = (document.getElementById("userSearch").value || "").toLowerCase().trim();
+  const role = document.getElementById("roleFilter").value;
+  const table = document.getElementById("usersTable");
+
+  const filtered = USERS.filter(u =>
+    (!q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)) &&
+    (!role || u.role === role)
+  );
+
+  table.innerHTML = `<tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Action</th></tr>` +
+    (filtered.length ? filtered.map(u => `
+      <tr>
+        <td>${u.name}</td>
+        <td>${u.email}</td>
+        <td>${u.role}</td>
+        <td><span class="badge ${u.active ? "available" : "borrowed"}">${u.active ? "Active" : "Deactivated"}</span></td>
+        <td><a class="btn ${u.active ? "btn-light" : "btn-primary"}" href="#" onclick="toggleUser(event, ${u.id})">${u.active ? "Deactivate" : "Activate"}</a></td>
+      </tr>
+    `).join("") : `<tr><td colspan="5" style="color:var(--muted)">No users match your search.</td></tr>`);
+}
+
+function toggleUser(event, id) {
+  event.preventDefault();
+  const user = USERS.find(u => u.id === id);
+  if (user) user.active = !user.active;
+  renderUsers();
+}
+
+document.addEventListener("DOMContentLoaded", renderUsers);
+</script>
+</body></html>

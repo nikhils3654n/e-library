@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Student Dashboard | E-LIBRARY</title><link rel="stylesheet" href="style.css"><script src="auth.js"></script>
+<script>protectPage();</script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="dashboard.html"><span class="brand-icon">📖</span>E-LIBRARY</a>
+<nav class="nav"><a class="active" href="dashboard.html">Dashboard</a><a class="" href="books.html">Browse Books</a><a class="" href="search.html">Search & Filter</a><a class="" href="my-library.html">My Library</a><a class="" href="favorites.html">Favorites</a><a class="" href="history.html">Reading History</a><a class="" href="reader.html">Online Reader</a><a href="login.html" data-logout>Logout</a></nav></header>
+<main class="container">
+<section class="hero">
+<div><h1>Welcome to Your Student Portal 📚</h1><p>Access your organization's digital books, manage your library, save favorites, and continue reading from one place.</p></div>
+<div class="hero-actions"><a class="btn btn-primary" href="books.html">Browse Books</a><a class="btn btn-light" href="reader.html">Continue Reading</a></div>
+</section>
+<div class="grid" style="margin-top:18px">
+<div class="card stat"><div class="icon">📚</div><div><h3>24</h3><p>Books Available</p></div></div>
+<div class="card stat"><div class="icon">📖</div><div><h3>3</h3><p>Currently Reading</p></div></div>
+<div class="card stat"><div class="icon">❤️</div><div><h3>8</h3><p>Favorites</p></div></div>
+<div class="card stat"><div class="icon">🔖</div><div><h3>2</h3><p>Reserved</p></div></div>
+</div>
+<div class="section-title"><h2>Continue Reading</h2><a class="btn btn-light" href="history.html">View History</a></div>
+<div class="card">
+<div class="profile"><div class="icon">📘</div><div><h3 style="margin:0">Python Programming</h3><p style="margin:5px 0;color:var(--muted)">Last opened: Chapter 4 • 68% completed</p></div></div>
+<div class="progress"><span style="width:68%"></span></div><a class="btn btn-primary" href="reader.html">Continue Reading</a>
+</div>
+<div class="section-title"><h2>Quick Access</h2></div>
+<div class="grid-3">
+<a class="card" href="books.html"><div class="icon">🔎</div><h3>Browse Books</h3><p>Explore the complete digital collection.</p></a>
+<a class="card" href="favorites.html"><div class="icon">❤️</div><h3>My Favorites</h3><p>Open the books you have saved.</p></a>
+<a class="card" href="my-library.html"><div class="icon">🗂️</div><h3>My Library</h3><p>See borrowed and reserved books.</p></a>
+</div>
+</main>
+<footer class="footer"><strong>E-LIBRARY</strong><p>Online Book Management and Reading System • Student Portal</p></footer>
+</body></html>
